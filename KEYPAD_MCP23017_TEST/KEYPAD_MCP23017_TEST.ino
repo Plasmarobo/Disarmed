@@ -17,37 +17,41 @@ bool keyStates[3][4] = {
   {false, false, false, false}
 };
 
-uint8_t row_masks[] = {
-  0x08, //ROW 1
-  0x01, //ROW 2
-  0x02, //ROW 3
-  0x04, //ROW 4
+uint8_t row_ports[] = {
+  0x0D, //TOP ROW 
+  0x08, //MID HIGH ROW 
+  0x09, //MID LOW ROW
+  0x0B, //BOTTOM ROW
 };
 
 uint8_t col_ports[] = {
-  14, //COL 1
-  15, //COL 2
-  13, //COL 3
+  0x0C, //LEFT COL
+  0x0E, //MID COL
+  0x0A, //RIGHT COL
 };
 
 void setup() {
   // put your setup code here, to run once:
+  pinMode(2, OUTPUT);
+  digitalWrite(2, HIGH);
+  delay(100);
   mcp.begin();
-  mcp.pinMode(8, INPUT);
-  mcp.pinMode(9, INPUT);
-  mcp.pinMode(10, INPUT);
-  mcp.pinMode(11, INPUT);
-  
-  mcp.pinMode(13, OUTPUT);
-  mcp.pinMode(14, OUTPUT);
-  mcp.pinMode(15, OUTPUT);
+  mcp.pinMode(0, OUTPUT);
+  mcp.digitalWrite(0, HIGH);
+  for(int i = 0; i < 4; ++i) {
+    mcp.pinMode(row_ports[i], INPUT);
+  }
 
+  for(int i = 0; i < 3; ++i) {
+    mcp.pinMode(col_ports[i], OUTPUT);
+  }
+  
   Serial.begin(115200);
 }
 
 void updateKey(int col, int row, uint8_t state) {
-  if (keyStates[col][row] != ((state & row_masks[row]) != 0)) {
-    keyStates[col][row] = ((state & row_masks[row]) != 0);
+  if (keyStates[col][row] != ((state & row_ports[row]) != 0)) {
+    keyStates[col][row] = ((state & row_ports[row]) != 0);
     if (keyStates[col][row] == true) {
       Serial.write(keys[col][row]);
       Serial.write('\n');
@@ -57,7 +61,7 @@ void updateKey(int col, int row, uint8_t state) {
 
 void ScanCol(int col){
   mcp.digitalWrite(col_ports[col], HIGH);
-  delay(20); //Debounce
+  delay(50); //Debounce
   uint8_t state = mcp.readGPIO(GPIO_B);
   mcp.digitalWrite(col_ports[col], LOW);
 
