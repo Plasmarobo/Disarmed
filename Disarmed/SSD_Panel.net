@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:\Users\austen\OneDrive\Documents\GitHub\Disarmed\Disarmed\Disarmed.sch)
-    (date "12/21/2020 6:11:48 PM")
+    (date "12/22/2020 12:52:03 PM")
     (tool "Eeschema (5.1.8)-1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -118,7 +118,7 @@
       (tstamp 603CD958))
     (comp (ref U2)
       (value MCP41010)
-      (footprint Package_DIP:DIP-8-16_W7.62mm)
+      (footprint Package_DIP:DIP-8_W7.62mm)
       (datasheet http://ww1.microchip.com/downloads/en/DeviceDoc/11195c.pdf)
       (libsource (lib Potentiometer_Digital) (part MCP41010) (description "Single Digital Potentiometer, SPI interface, 256 taps, 10 kohm"))
       (sheetpath (names /SSD_Panel/) (tstamps /5FDA965E/))

@@ -963,7 +963,7 @@ U 1 1 602EE2CA
 P 1400 1200
 F 0 "U2" H 1400 1781 50  0000 C CNN
 F 1 "MCP41010" H 1400 1690 50  0000 C CNN
-F 2 "Package_DIP:DIP-8-16_W7.62mm" H 1400 1200 50  0001 C CNN
+F 2 "Package_DIP:DIP-8_W7.62mm" H 1400 1200 50  0001 C CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/11195c.pdf" H 1400 1200 50  0001 C CNN
 	1    1400 1200
 	1    0    0    -1  
