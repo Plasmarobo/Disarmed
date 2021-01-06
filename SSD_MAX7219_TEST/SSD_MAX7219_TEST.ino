@@ -254,7 +254,7 @@ void WriteHex(uint8_t device, uint32_t value)
   }
 }
 
-void UpdateDisplay()
+void UpdateDisplayHex()
 {
   ClearDisplayMAX72XX();
   for (uint8_t digit = 0; digit < DIGITS_PER_DEVICE; ++digit)
@@ -287,7 +287,7 @@ void loop() {
     {
          WriteHex(device, rand());
     }
-    UpdateDisplay();
+    UpdateDisplayHex();
     ++cycle;
     wait(delaytime);
 }
