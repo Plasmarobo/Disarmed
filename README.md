@@ -1,6 +1,6 @@
 # DISARMED!
 
-Heavily inspired by (Keep Talking and Nobody Explodes)[https://keeptalkinggame.com/] and (Bomb Corp)[https://www.jackboxgames.com/bomb-corp/]
+Heavily inspired by [Keep Talking and Nobody Explodes](https://keeptalkinggame.com/) and [Bomb Corp](https://www.jackboxgames.com/bomb-corp/)
 A physical "Bop-It for adults". 
 
 This ammounts to a electroncs and software programming project, with a side-helping of game design and art!
