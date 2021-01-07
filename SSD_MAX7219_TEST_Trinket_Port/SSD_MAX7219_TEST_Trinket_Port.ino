@@ -193,7 +193,7 @@ void SetCharMAX72XX(uint32_t device, uint8_t digit, char value, bool dp) {
     {
       value = 32;
     }
-    DigitMAX72XX(device, digit, value, dp);
+    DigitMAX72XX(device, digit, pgm_read_byte_near(charTable + value), dp);
 }
 
 void ClearDisplayMAX72XX()
@@ -263,7 +263,72 @@ void WriteHex(uint8_t device, uint32_t value)
   }
 }
 
+uint16_t lock_time[TOTAL_DIGITS] = { 0 };
+const uint32_t restart_delay = 5000;
+uint16_t first_second = 0;
+uint16_t final_second = 0;
+const uint16_t max_time_per_digit = min(2500, (65535 - TOTAL_DIGITS) / TOTAL_DIGITS);
+
+void GenerateLockTimes()
+{
+  uint16_t current_time = 0;
+  uint8_t j = 0;
+  memset(reinterpret_cast<uint8_t*>(lock_time), 0, sizeof(lock_time));
+  for(uint8_t i = 0; i < TOTAL_DIGITS; ++i)
+  {
+    current_time += 1 + (rand() % max_time_per_digit);
+    j = rand() % TOTAL_DIGITS;
+    while(lock_time[j] != 0)
+    {
+      ++j;
+      if (j >= TOTAL_DIGITS)
+      {
+        j = 0;
+      }
+    }
+    lock_time[j] = current_time;
+  }
+  final_second = current_time + 1;
+  first_second = millis();
+}
+
+void WargamesUpdate(uint8_t value)
+{
+  uint16_t second = millis() - first_second;
+  if (second > final_second)
+  {
+      delay(restart_delay);
+      GenerateLockTimes();
+  }
+  // Copy value into non-locked digits
+  for(uint8_t device = 0; device < MAX72XX_DEVICE_COUNT; ++device)
+  {
+    for(uint8_t digit = 0; digit < DIGITS_PER_DEVICE; ++digit)
+    {
+      uint8_t index = (device * DIGITS_PER_DEVICE) + digit;
+      if (lock_time[index] < second)
+      {
+        continue;
+      }
+      digit_array[(device * DIGITS_PER_DEVICE) + digit] = value;
+    }
+  }
+}
+
 void UpdateDisplayHex()
+{
+  ClearDisplayMAX72XX();
+  for (uint8_t digit = 0; digit < DIGITS_PER_DEVICE; ++digit)
+  {
+    for (uint32_t device = 0; device < MAX72XX_DEVICE_COUNT; ++device)
+    {
+      SetCharMAX72XX(device, digit, digit_array[(device * DIGITS_PER_DEVICE) + digit], false);
+    }
+    CommitMAX72XXBuffer();
+  }
+}
+
+void UpdateDisplayChar()
 {
   ClearDisplayMAX72XX();
   for (uint8_t digit = 0; digit < DIGITS_PER_DEVICE; ++digit)
@@ -277,7 +342,7 @@ void UpdateDisplayHex()
 }
 
 /* we always wait a bit between updates of the display */
-unsigned long delaytime=150;
+unsigned long delaytime=30;
 
 void setup() {
   srand(time(NULL));
@@ -287,14 +352,13 @@ void setup() {
   SetupMAX72XX();
 }
 
-uint32_t cycle = 0;
+uint8_t cycle = 0;
 
 void loop() { 
-    for(uint32_t device = 0; device < MAX72XX_DEVICE_COUNT; ++device)
-    {
-         WriteHex(device, rand() | (((uint32_t)rand()) << 16));
-    }
+    //digit_array[cycle] = cycle;
+    WargamesUpdate(cycle % 10);
     UpdateDisplayHex();
+    //UpdateDisplayChar();
     ++cycle;
     wait(delaytime);
 }
