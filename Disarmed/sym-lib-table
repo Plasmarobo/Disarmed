@@ -1,3 +1,4 @@
 (sym_lib_table
   (lib (name DisarmedParts)(type Legacy)(uri C:/Users/austen/OneDrive/Documents/GitHub/Disarmed/DisarmedParts.lib)(options "")(descr ""))
+  (lib (name led-ccl-a-a-xxxx-6h)(type Legacy)(uri ${KIPRJMOD}/LED/led-ccl-a-a-xxxx-6h.lib)(options "")(descr ""))
 )

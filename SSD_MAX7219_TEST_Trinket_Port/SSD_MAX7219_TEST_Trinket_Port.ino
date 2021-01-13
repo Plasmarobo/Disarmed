@@ -276,6 +276,7 @@ void GenerateLockTimes()
   memset(reinterpret_cast<uint8_t*>(lock_time), 0, sizeof(lock_time));
   for(uint8_t i = 0; i < TOTAL_DIGITS; ++i)
   {
+    digit_array[i] = rand() % 10;
     current_time += 1 + (rand() % max_time_per_digit);
     j = rand() % TOTAL_DIGITS;
     while(lock_time[j] != 0)
@@ -310,7 +311,7 @@ void WargamesUpdate(uint8_t value)
       {
         continue;
       }
-      digit_array[(device * DIGITS_PER_DEVICE) + digit] = value;
+      digit_array[(device * DIGITS_PER_DEVICE) + digit] = (digit_array[(device * DIGITS_PER_DEVICE) + digit] + 1) % 10;
     }
   }
 }
@@ -350,6 +351,7 @@ void setup() {
   SetupMCP41XXX();
   SetMCP41XXX(255);
   SetupMAX72XX();
+  GenerateLockTimes();
 }
 
 uint8_t cycle = 0;
