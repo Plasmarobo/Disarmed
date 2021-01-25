@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 3 3
+Sheet 3 5
 Title ""
 Date ""
 Rev ""
@@ -34,10 +34,10 @@ F 12 "Active" H 8100 2500 60  0001 L CNN "Status"
 	1    0    0    -1  
 $EndComp
 $Comp
-L dk_LEDs-Circuit-Board-Indicators-Arrays-Light-Bars-Bar-Graphs:LTA-1000G D3
+L dk_LEDs-Circuit-Board-Indicators-Arrays-Light-Bars-Bar-Graphs:LTA-1000G D2
 U 1 1 5FFE45CD
 P 7900 3500
-F 0 "D3" H 7900 3787 60  0000 C CNN
+F 0 "D2" H 7900 3787 60  0000 C CNN
 F 1 "LTA-1000G" H 7900 3681 60  0000 C CNN
 F 2 "digikey-footprints:LED_Bar_Graph_LTA-1000" H 8100 3700 60  0001 L CNN
 F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-92-0809/A1000G.pdf" H 8100 3800 60  0001 L CNN
@@ -54,10 +54,10 @@ F 12 "Active" H 8100 4700 60  0001 L CNN "Status"
 	1    0    0    -1  
 $EndComp
 $Comp
-L dk_LEDs-Circuit-Board-Indicators-Arrays-Light-Bars-Bar-Graphs:LTA-1000HR D7
+L dk_LEDs-Circuit-Board-Indicators-Arrays-Light-Bars-Bar-Graphs:LTA-1000HR D4
 U 1 1 5FFEB317
 P 7900 7750
-F 0 "D7" H 7900 8037 60  0000 C CNN
+F 0 "D4" H 7900 8037 60  0000 C CNN
 F 1 "LTA-1000HR" H 7900 7931 60  0000 C CNN
 F 2 "digikey-footprints:LED_Bar_Graph_LTA-1000" H 8100 7950 60  0001 L CNN
 F 3 "http://optoelectronics.liteon.com/upload/download/DS-30-92-0810/LTA-1000HR.pdf" H 8100 8050 60  0001 L CNN
@@ -74,10 +74,10 @@ F 12 "Active" H 8100 8950 60  0001 L CNN "Status"
 	1    0    0    -1  
 $EndComp
 $Comp
-L dk_LEDs-Circuit-Board-Indicators-Arrays-Light-Bars-Bar-Graphs:LTA-1000Y D5
+L dk_LEDs-Circuit-Board-Indicators-Arrays-Light-Bars-Bar-Graphs:LTA-1000Y D3
 U 1 1 5FFF0594
 P 7900 5650
-F 0 "D5" H 7900 5937 60  0000 C CNN
+F 0 "D3" H 7900 5937 60  0000 C CNN
 F 1 "LTA-1000Y" H 7900 5831 60  0000 C CNN
 F 2 "digikey-footprints:LED_Bar_Graph_LTA-1000" H 8100 5850 60  0001 L CNN
 F 3 "https://media.digikey.com/pdf/Data%20Sheets/Lite-On%20PDFs/LTA-1000Y.pdf" H 8100 5950 60  0001 L CNN
@@ -94,10 +94,10 @@ F 12 "Active" H 8100 6850 60  0001 L CNN "Status"
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U6
+L 74xx:74HC595 U2
 U 1 1 5FFFB499
 P 6150 1700
-F 0 "U6" H 6150 2481 50  0000 C CNN
+F 0 "U2" H 6150 2481 50  0000 C CNN
 F 1 "74HC595" H 6150 2390 50  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 6150 1700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 6150 1700 50  0001 C CNN
@@ -105,10 +105,10 @@ F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 6150 1700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U10
+L 74xx:74HC595 U3
 U 1 1 5FFFD9D0
 P 6150 3700
-F 0 "U10" H 6150 4481 50  0000 C CNN
+F 0 "U3" H 6150 4481 50  0000 C CNN
 F 1 "74HC595" H 6150 4390 50  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 6150 3700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 6150 3700 50  0001 C CNN
@@ -116,10 +116,10 @@ F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 6150 3700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U13
+L 74xx:74HC595 U4
 U 1 1 5FFFF606
 P 6150 5650
-F 0 "U13" H 6150 6431 50  0000 C CNN
+F 0 "U4" H 6150 6431 50  0000 C CNN
 F 1 "74HC595" H 6150 6340 50  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 6150 5650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 6150 5650 50  0001 C CNN
@@ -127,10 +127,10 @@ F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 6150 5650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U17
+L 74xx:74HC595 U6
 U 1 1 60001017
 P 6150 9450
-F 0 "U17" H 6150 10231 50  0000 C CNN
+F 0 "U6" H 6150 10231 50  0000 C CNN
 F 1 "74HC595" H 6150 10140 50  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 6150 9450 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 6150 9450 50  0001 C CNN
@@ -138,10 +138,10 @@ F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 6150 9450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74HC595 U16
+L 74xx:74HC595 U5
 U 1 1 60002761
 P 6150 7550
-F 0 "U16" H 6150 8331 50  0000 C CNN
+F 0 "U5" H 6150 8331 50  0000 C CNN
 F 1 "74HC595" H 6150 8240 50  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 6150 7550 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 6150 7550 50  0001 C CNN
@@ -160,10 +160,10 @@ F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 8700 1800 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R_Network10 RN4
+L Device:R_Network10 RN2
 U 1 1 60024986
 P 8700 4000
-F 0 "RN4" V 7983 4000 50  0000 C CNN
+F 0 "RN2" V 7983 4000 50  0000 C CNN
 F 1 "4.7K" V 8074 4000 50  0000 C CNN
 F 2 "Resistor_THT:R_Array_SIP11" V 9275 4000 50  0001 C CNN
 F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 8700 4000 50  0001 C CNN
@@ -171,10 +171,10 @@ F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 8700 4000 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R_Network10 RN7
+L Device:R_Network10 RN3
 U 1 1 60028D61
 P 8700 6150
-F 0 "RN7" V 7983 6150 50  0000 C CNN
+F 0 "RN3" V 7983 6150 50  0000 C CNN
 F 1 "4.7K" V 8074 6150 50  0000 C CNN
 F 2 "Resistor_THT:R_Array_SIP11" V 9275 6150 50  0001 C CNN
 F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 8700 6150 50  0001 C CNN
@@ -182,10 +182,10 @@ F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 8700 6150 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Device:R_Network10 RN10
+L Device:R_Network10 RN4
 U 1 1 6002B12D
 P 8700 8250
-F 0 "RN10" V 7983 8250 50  0000 C CNN
+F 0 "RN4" V 7983 8250 50  0000 C CNN
 F 1 "4.7K" V 8074 8250 50  0000 C CNN
 F 2 "Resistor_THT:R_Array_SIP11" V 9275 8250 50  0001 C CNN
 F 3 "http://www.vishay.com/docs/31509/csc.pdf" H 8700 8250 50  0001 C CNN
@@ -465,10 +465,10 @@ Wire Wire Line
 Wire Wire Line
 	5200 1600 5750 1600
 $Comp
-L Device:C C1
+L Device:C C2
 U 1 1 603B7FEF
 P 5200 1950
-F 0 "C1" H 5315 1996 50  0000 L CNN
+F 0 "C2" H 5315 1996 50  0000 L CNN
 F 1 "10uF" H 5315 1905 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1812_4532Metric_Pad1.57x3.40mm_HandSolder" H 5238 1800 50  0001 C CNN
 F 3 "~" H 5200 1950 50  0001 C CNN
@@ -629,10 +629,10 @@ Wire Wire Line
 Text Label 5200 2300 0    50   ~ 0
 GND
 $Comp
-L dk_Embedded-Microcontrollers:ATTINY85-20PU U9
+L dk_Embedded-Microcontrollers:ATTINY85-20PU U1
 U 1 1 60534FCC
 P 2900 2600
-F 0 "U9" H 3128 2603 60  0000 L CNN
+F 0 "U1" H 3128 2603 60  0000 L CNN
 F 1 "ATTINY85-20PU" H 3128 2497 60  0000 L CNN
 F 2 "digikey-footprints:DIP-8_W7.62mm" H 3100 2800 60  0001 L CNN
 F 3 "http://www.microchip.com/mymicrochip/filehandler.aspx?ddocname=en589894" H 3100 2900 60  0001 L CNN
@@ -649,10 +649,10 @@ F 12 "Active" H 3100 3800 60  0001 L CNN "Status"
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector_Generic:Conn_02x03_Odd_Even J2
+L Connector_Generic:Conn_02x03_Odd_Even J1
 U 1 1 605375D2
 P 2900 1200
-F 0 "J2" H 2950 1517 50  0000 C CNN
+F 0 "J1" H 2950 1517 50  0000 C CNN
 F 1 "Conn_02x03_Odd_Even" H 2950 1426 50  0000 C CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" H 2900 1200 50  0001 C CNN
 F 3 "~" H 2900 1200 50  0001 C CNN
@@ -688,10 +688,10 @@ Wire Wire Line
 Wire Wire Line
 	3000 3100 3000 3200
 $Comp
-L Device:C C2
+L Device:C C1
 U 1 1 605AE30F
 P 3600 2150
-F 0 "C2" H 3715 2196 50  0000 L CNN
+F 0 "C1" H 3715 2196 50  0000 L CNN
 F 1 "0.1uF" H 3715 2105 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1812_4532Metric_Pad1.57x3.40mm_HandSolder" H 3638 2000 50  0001 C CNN
 F 3 "~" H 3600 2150 50  0001 C CNN
@@ -725,10 +725,10 @@ MISO_DATA
 Text Label 1700 2600 0    50   ~ 0
 SCK
 $Comp
-L Device:R R2
+L Device:R R1
 U 1 1 6069BAEC
 P 2200 3100
-F 0 "R2" H 2270 3146 50  0000 L CNN
+F 0 "R1" H 2270 3146 50  0000 L CNN
 F 1 "10K" H 2270 3055 50  0000 L CNN
 F 2 "Resistor_SMD:R_1210_3225Metric_Pad1.30x2.65mm_HandSolder" V 2130 3100 50  0001 C CNN
 F 3 "~" H 2200 3100 50  0001 C CNN
@@ -763,10 +763,10 @@ Wire Wire Line
 Wire Wire Line
 	2700 2400 1700 2400
 $Comp
-L DisarmedParts:LED-CCL-A-A-XXXX-6H D2
+L DisarmedParts:LED-CCL-A-A-XXXX-6H D5
 U 1 1 607DD17C
 P 12750 1900
-F 0 "D2" H 12750 2775 50  0000 C CNN
+F 0 "D5" H 12750 2775 50  0000 C CNN
 F 1 "LED-CCL-A-A-XXXX-6H" H 12750 2684 50  0000 C CNN
 F 2 "Disarmed:LED-CCL-A-A-XXXX-H6" H 12750 2750 50  0001 C CNN
 F 3 "" H 12750 2750 50  0001 C CNN
@@ -774,12 +774,12 @@ F 3 "" H 12750 2750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R_Pack08 RN2
+L Device:R_Pack08 RN5
 U 1 1 6080C200
 P 11550 2000
-F 0 "RN2" V 10933 2000 50  0000 C CNN
+F 0 "RN5" V 10933 2000 50  0000 C CNN
 F 1 "R_Pack08" V 11024 2000 50  0000 C CNN
-F 2 "Battery:BatteryHolder_Bulgin_BX0036_1xC" V 12025 2000 50  0001 C CNN
+F 2 "footprints:EXB-2HV471JV" V 12025 2000 50  0001 C CNN
 F 3 "~" H 11550 2000 50  0001 C CNN
 	1    11550 2000
 	0    1    1    0   
@@ -870,10 +870,10 @@ Wire Wire Line
 Wire Wire Line
 	11750 1600 11850 1600
 $Comp
-L Device:R_Pack08 RN3
+L Device:R_Pack08 RN8
 U 1 1 60B18C78
 P 13950 2000
-F 0 "RN3" V 13333 2000 50  0000 C CNN
+F 0 "RN8" V 13333 2000 50  0000 C CNN
 F 1 "R_Pack08" V 13424 2000 50  0000 C CNN
 F 2 "footprints:EXB-2HV471JV" V 14425 2000 50  0001 C CNN
 F 3 "~" H 13950 2000 50  0001 C CNN
@@ -1032,10 +1032,10 @@ Wire Wire Line
 Text Label 15300 1800 0    50   ~ 0
 CLK
 $Comp
-L DisarmedParts:LED-CCL-A-A-XXXX-6H D4
+L DisarmedParts:LED-CCL-A-A-XXXX-6H D6
 U 1 1 60C9E115
 P 12750 4350
-F 0 "D4" H 12750 5225 50  0000 C CNN
+F 0 "D6" H 12750 5225 50  0000 C CNN
 F 1 "LED-CCL-A-A-XXXX-6H" H 12750 5134 50  0000 C CNN
 F 2 "Disarmed:LED-CCL-A-A-XXXX-H6" H 12750 5200 50  0001 C CNN
 F 3 "" H 12750 5200 50  0001 C CNN
@@ -1043,10 +1043,10 @@ F 3 "" H 12750 5200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R_Pack08 RN5
+L Device:R_Pack08 RN6
 U 1 1 60C9EA2B
 P 11550 4450
-F 0 "RN5" V 10933 4450 50  0000 C CNN
+F 0 "RN6" V 10933 4450 50  0000 C CNN
 F 1 "R_Pack08" V 11024 4450 50  0000 C CNN
 F 2 "footprints:EXB-2HV471JV" V 12025 4450 50  0001 C CNN
 F 3 "~" H 11550 4450 50  0001 C CNN
@@ -1054,10 +1054,10 @@ F 3 "~" H 11550 4450 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L 74xx:74HC595 U11
+L 74xx:74HC595 U9
 U 1 1 60C9EA35
 P 10800 4450
-F 0 "U11" H 10800 5231 50  0000 C CNN
+F 0 "U9" H 10800 5231 50  0000 C CNN
 F 1 "74HC595" H 10800 5140 50  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 10800 4450 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 10800 4450 50  0001 C CNN
@@ -1141,10 +1141,10 @@ Wire Wire Line
 Wire Wire Line
 	11750 4050 11850 4050
 $Comp
-L Device:R_Pack08 RN6
+L Device:R_Pack08 RN9
 U 1 1 60C9EA65
 P 13950 4450
-F 0 "RN6" V 13333 4450 50  0000 C CNN
+F 0 "RN9" V 13333 4450 50  0000 C CNN
 F 1 "R_Pack08" V 13424 4450 50  0000 C CNN
 F 2 "footprints:EXB-2HV471JV" V 14425 4450 50  0001 C CNN
 F 3 "~" H 13950 4450 50  0001 C CNN
@@ -1152,10 +1152,10 @@ F 3 "~" H 13950 4450 50  0001 C CNN
 	0    -1   1    0   
 $EndComp
 $Comp
-L 74xx:74HC595 U12
+L 74xx:74HC595 U10
 U 1 1 60C9EA6F
 P 14700 4450
-F 0 "U12" H 14700 5231 50  0000 C CNN
+F 0 "U10" H 14700 5231 50  0000 C CNN
 F 1 "74HC595" H 14700 5140 50  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 14700 4450 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 14700 4450 50  0001 C CNN
@@ -1301,10 +1301,10 @@ Wire Wire Line
 Text Label 15300 4250 0    50   ~ 0
 CLK
 $Comp
-L DisarmedParts:LED-CCL-A-A-XXXX-6H D6
+L DisarmedParts:LED-CCL-A-A-XXXX-6H D7
 U 1 1 60D1055C
 P 12750 6750
-F 0 "D6" H 12750 7625 50  0000 C CNN
+F 0 "D7" H 12750 7625 50  0000 C CNN
 F 1 "LED-CCL-A-A-XXXX-6H" H 12750 7534 50  0000 C CNN
 F 2 "Disarmed:LED-CCL-A-A-XXXX-H6" H 12750 7600 50  0001 C CNN
 F 3 "" H 12750 7600 50  0001 C CNN
@@ -1312,10 +1312,10 @@ F 3 "" H 12750 7600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R_Pack08 RN8
+L Device:R_Pack08 RN7
 U 1 1 60D1104A
 P 11550 6850
-F 0 "RN8" V 10933 6850 50  0000 C CNN
+F 0 "RN7" V 10933 6850 50  0000 C CNN
 F 1 "R_Pack08" V 11024 6850 50  0000 C CNN
 F 2 "footprints:EXB-2HV471JV" V 12025 6850 50  0001 C CNN
 F 3 "~" H 11550 6850 50  0001 C CNN
@@ -1323,10 +1323,10 @@ F 3 "~" H 11550 6850 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L 74xx:74HC595 U14
+L 74xx:74HC595 U11
 U 1 1 60D11054
 P 10800 6850
-F 0 "U14" H 10800 7631 50  0000 C CNN
+F 0 "U11" H 10800 7631 50  0000 C CNN
 F 1 "74HC595" H 10800 7540 50  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 10800 6850 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 10800 6850 50  0001 C CNN
@@ -1408,10 +1408,10 @@ Wire Wire Line
 Wire Wire Line
 	11750 6450 11850 6450
 $Comp
-L Device:R_Pack08 RN9
+L Device:R_Pack08 RN10
 U 1 1 60D11084
 P 13950 6850
-F 0 "RN9" V 13333 6850 50  0000 C CNN
+F 0 "RN10" V 13333 6850 50  0000 C CNN
 F 1 "R_Pack08" V 13424 6850 50  0000 C CNN
 F 2 "footprints:EXB-2HV471JV" V 14425 6850 50  0001 C CNN
 F 3 "~" H 13950 6850 50  0001 C CNN
@@ -1419,10 +1419,10 @@ F 3 "~" H 13950 6850 50  0001 C CNN
 	0    -1   1    0   
 $EndComp
 $Comp
-L 74xx:74HC595 U15
+L 74xx:74HC595 U12
 U 1 1 60D1108E
 P 14700 6850
-F 0 "U15" H 14700 7631 50  0000 C CNN
+F 0 "U12" H 14700 7631 50  0000 C CNN
 F 1 "74HC595" H 14700 7540 50  0000 C CNN
 F 2 "Package_DIP:DIP-16_W7.62mm" H 14700 6850 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/sn74hc595.pdf" H 14700 6850 50  0001 C CNN
@@ -1564,10 +1564,10 @@ CLK
 Text Label 5200 5750 0    50   ~ 0
 LATCH
 $Comp
-L power:GND #PWR04
+L power:GND #PWR01
 U 1 1 60D6AE80
 P 2050 3950
-F 0 "#PWR04" H 2050 3700 50  0001 C CNN
+F 0 "#PWR01" H 2050 3700 50  0001 C CNN
 F 1 "GND" H 2055 3777 50  0000 C CNN
 F 2 "" H 2050 3950 50  0001 C CNN
 F 3 "" H 2050 3950 50  0001 C CNN
@@ -1579,10 +1579,10 @@ Wire Wire Line
 Text Label 2050 3700 0    50   ~ 0
 GND
 $Comp
-L power:+5V #PWR03
+L power:+5V #PWR02
 U 1 1 60DAF4CB
 P 2500 3700
-F 0 "#PWR03" H 2500 3550 50  0001 C CNN
+F 0 "#PWR02" H 2500 3550 50  0001 C CNN
 F 1 "+5V" H 2515 3873 50  0000 C CNN
 F 2 "" H 2500 3700 50  0001 C CNN
 F 3 "" H 2500 3700 50  0001 C CNN
@@ -1594,10 +1594,10 @@ Wire Wire Line
 Text Label 2500 3950 0    50   ~ 0
 VCC
 $Comp
-L Connector:Conn_01x02_Male J3
+L Connector:Conn_01x02_Male J2
 U 1 1 60DF2360
 P 3150 3750
-F 0 "J3" H 3258 3931 50  0000 C CNN
+F 0 "J2" H 3258 3931 50  0000 C CNN
 F 1 "Conn_01x02_Male" H 3258 3840 50  0000 C CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 3150 3750 50  0001 C CNN
 F 3 "~" H 3150 3750 50  0001 C CNN
@@ -1667,4 +1667,10 @@ Wire Wire Line
 	3050 4500 3400 4500
 Text Label 3400 4500 0    50   ~ 0
 GND
+Text Notes 1350 1500 0    50   ~ 0
+Implements a I2C interface to the master system.
+Text Notes 1050 1600 0    50   ~ 0
+Drives shift registers via SPI like protocol using SPI hardware (or software transfer)
+Text Notes 1200 1700 0    50   ~ 0
+ISP used for programming, shares pins with master system I2C
 $EndSCHEMATC

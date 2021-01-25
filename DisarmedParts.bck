@@ -1,3 +1,15 @@
 EESchema-DOCLIB  Version 2.0
 #
+$CMP R_Network15
+D 13 resistor network, star topology, bussed resistors, small symbol
+K R network star-topology
+F http://www.vishay.com/docs/31509/csc.pdf
+$ENDCMP
+#
+$CMP SW_SPST_LED
+D Single Pole Single Throw (SPST) switch with LED, generic
+K switch SPST LED OFF-ON
+F ~
+$ENDCMP
+#
 #End Doc Library
