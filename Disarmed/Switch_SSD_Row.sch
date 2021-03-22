@@ -218,62 +218,73 @@ DIG_3
 Text Label 8550 1700 0    50   ~ 0
 DIG_3
 Wire Wire Line
-	4175 2600 3750 2600
+	2150 2775 1725 2775
 Wire Wire Line
-	4175 2700 3750 2700
-Wire Wire Line
-	4175 2800 3750 2800
-Wire Wire Line
-	4175 2900 3750 2900
-Wire Wire Line
-	4675 2600 5050 2600
-Wire Wire Line
-	5050 2700 4675 2700
-Wire Wire Line
-	4675 2800 5050 2800
-Wire Wire Line
-	4675 2900 5050 2900
-Wire Wire Line
-	4675 3000 5050 3000
-Wire Wire Line
-	4675 3100 5050 3100
-Text Label 5050 2600 0    50   ~ 0
-SEG_E
-Text Label 5050 2700 0    50   ~ 0
-SEG_D
-Text Label 5050 2800 0    50   ~ 0
-SEG_C
-Text Label 5050 2900 0    50   ~ 0
-SEG_DP
-Text Label 5050 3000 0    50   ~ 0
-SEG_B
-Text Label 5050 3100 0    50   ~ 0
-SEG_A
-Text Label 3775 3000 0    50   ~ 0
-SEG_F
-Text Label 3775 3100 0    50   ~ 0
-SEG_G
-Text Label 3750 2600 0    50   ~ 0
+	2150 2875 1725 2875
+Text Label 1725 2775 0    50   ~ 0
 DIG_0
-Text Label 3750 2700 0    50   ~ 0
+Text Label 1725 2875 0    50   ~ 0
 DIG_1
-Text Label 3750 2800 0    50   ~ 0
+Text Label 2850 2775 0    50   ~ 0
 DIG_2
-Text Label 3750 2900 0    50   ~ 0
+Text Label 2850 2875 0    50   ~ 0
 DIG_3
+Wire Wire Line
+	2625 3300 3000 3300
+Wire Wire Line
+	3000 3400 2625 3400
+Text Label 3000 3300 0    50   ~ 0
+SEG_E
+Text Label 3000 3400 0    50   ~ 0
+SEG_D
+Text Label 3000 3500 0    50   ~ 0
+SEG_C
+Text Label 3000 3600 0    50   ~ 0
+SEG_DP
+Text Label 1725 3500 0    50   ~ 0
+SEG_B
+Text Label 1725 3600 0    50   ~ 0
+SEG_A
+Text Label 1725 3300 0    50   ~ 0
+SEG_F
+Text Label 1725 3400 0    50   ~ 0
+SEG_G
+Wire Wire Line
+	2125 3400 1725 3400
+Wire Wire Line
+	2125 3300 1725 3300
 $Comp
-L Connector_Generic:Conn_02x06_Counter_Clockwise J1
-U 1 1 607636A3
-P 4375 2800
-F 0 "J1" H 4425 3217 50  0000 C CNN
-F 1 "Conn_02x06_Counter_Clockwise" H 4425 3126 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_2x06_P2.54mm_Vertical" H 4375 2800 50  0001 C CNN
-F 3 "~" H 4375 2800 50  0001 C CNN
-	1    4375 2800
+L Connector_Generic:Conn_02x02_Odd_Even J1
+U 1 1 6028EE9B
+P 2350 2775
+F 0 "J1" H 2400 2992 50  0000 C CNN
+F 1 "Conn_02x02_Odd_Even" H 2400 2901 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_2x02_P2.54mm_Vertical" H 2350 2775 50  0001 C CNN
+F 3 "~" H 2350 2775 50  0001 C CNN
+	1    2350 2775
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_02x04_Odd_Even J2
+U 1 1 6028EEA1
+P 2325 3400
+F 0 "J2" H 2375 3717 50  0000 C CNN
+F 1 "Conn_02x04_Odd_Even" H 2375 3626 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_2x04_P2.54mm_Vertical" H 2325 3400 50  0001 C CNN
+F 3 "~" H 2325 3400 50  0001 C CNN
+	1    2325 3400
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4175 3100 3775 3100
+	2625 3500 3000 3500
 Wire Wire Line
-	4175 3000 3775 3000
+	2625 3600 3000 3600
+Wire Wire Line
+	1725 3500 2125 3500
+Wire Wire Line
+	2125 3600 1725 3600
+Wire Wire Line
+	2650 2775 2850 2775
+Wire Wire Line
+	2650 2875 2850 2875
 $EndSCHEMATC

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 3 5
+Sheet 3 6
 Title ""
 Date ""
 Rev ""
@@ -674,7 +674,7 @@ Wire Wire Line
 Text Label 2200 1100 0    50   ~ 0
 MISO_DATA
 Text Label 2200 1200 0    50   ~ 0
-SCK
+SCK_SCL
 Text Label 2200 1300 0    50   ~ 0
 RST
 Text Label 3700 1100 0    50   ~ 0
@@ -723,7 +723,7 @@ MOSI_SDA
 Text Label 1700 2500 0    50   ~ 0
 MISO_DATA
 Text Label 1700 2600 0    50   ~ 0
-SCK
+SCK_SCL
 $Comp
 L Device:R R1
 U 1 1 6069BAEC

@@ -1,4 +1,8 @@
 (sym_lib_table
   (lib (name DisarmedParts)(type Legacy)(uri C:/Users/austen/OneDrive/Documents/GitHub/Disarmed/DisarmedParts.lib)(options "")(descr ""))
   (lib (name led-ccl-a-a-xxxx-6h)(type Legacy)(uri ${KIPRJMOD}/LED/led-ccl-a-a-xxxx-6h.lib)(options "")(descr ""))
+  (lib (name Switch_Panel-rescue)(type Legacy)(uri ${KIPRJMOD}/Switch_Panel-rescue.lib)(options "")(descr ""))
+  (lib (name Analog_Panel-rescue)(type Legacy)(uri ${KIPRJMOD}/Analog_Panel-rescue.lib)(options "")(descr ""))
+  (lib (name SSD_Panel-rescue)(type Legacy)(uri ${KIPRJMOD}/SSD_Panel-rescue.lib)(options "")(descr ""))
+  (lib (name LED_Panel-rescue)(type Legacy)(uri ${KIPRJMOD}/LED_Panel-rescue.lib)(options "")(descr ""))
 )

@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "LED_MCU_DRIVER",
+			"path": "LED_MCU_DRIVER\\LED_MCU_DRIVER"
+		}
+	],
+	"settings": {}
+}

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 5
+Sheet 1 6
 Title ""
 Date ""
 Rev ""
@@ -36,5 +36,11 @@ S 7450 900  1975 2100
 U 6008A670
 F0 "Analog_Panel" 50
 F1 "Analog_Panel.sch" 50
+$EndSheet
+$Sheet
+S 5400 3375 1525 1600
+U 60463F34
+F0 "Switch_SSD_Row" 50
+F1 "Switch_SSD_Row.sch" 50
 $EndSheet
 $EndSCHEMATC

@@ -1,366 +1,386 @@
-#include <tinySPI.h>
-#define HARDWARE_SPI 0
-const int               // storage register clock (slave select)
-    DATA_PIN(1),                // data in
-    CLOCK_PIN(0);               // shift register clock
+#include <EEPROM.h>
 
-//#include <SPI.h>
+// Firmware Version
+#define FW_VERSION 0x03
 
-#include <stdlib.h>
-#include <time.h>
+// Shift Clock: Arduino Pin 3, PortB(3)
+#define SHIFT_CLK_PIN 3
 
-/*
-void wait(uint32_t ms)
+// Shift Latch: Arduino Pin 4, PortB(4)
+#define SHIFT_LATCH_PIN 4
+
+// Shift Data: Arduino Pin 1, PortB(1)
+#define SHIFT_DATA_PIN 1
+
+// I2C Slave pins
+// I2C SDA, Arduino Pin 0, PortB(0)
+#define I2C_SDA_PIN 0
+
+// I2C SCL, Arduino Pin 2, PortB(2)
+#define I2C_SCL_PIN 2
+
+/**
+ * Pin notes by Suovula, see also http://hlt.media.mit.edu/?p=1229
+ *
+ * DIP and SOIC have same pinout, however the SOIC chips are much cheaper, especially if you buy more than 5 at a time
+ * For nice breakout boards see https://github.com/rambo/attiny_boards
+ *
+ * Basically the arduino pin numbers map directly to the PORTB bit numbers.
+ *
+// I2C
+arduino pin 0 = not(OC1A) = PORTB <- _BV(0) = SOIC pin 5 (I2C SDA, PWM)
+arduino pin 2 =           = PORTB <- _BV(2) = SOIC pin 7 (I2C SCL, Analog 1)
+// Timer1 -> PWM
+arduino pin 1 =     OC1A  = PORTB <- _BV(1) = SOIC pin 6 (PWM)
+arduino pin 3 = not(OC1B) = PORTB <- _BV(3) = SOIC pin 2 (Analog 3)
+arduino pin 4 =     OC1B  = PORTB <- _BV(4) = SOIC pin 3 (Analog 2)
+ */
+#define DEFAULT_I2C_SLAVE_ADDRESS 0xE4 // the 7-bit address (remember to change this when adapting this example)
+// Get this from https://github.com/rambo/TinyWire
+#include <TinyWireS.h>
+// The default buffer size, Can't recall the scope of defines right now
+#ifndef TWI_RX_BUFFER_SIZE
+#define TWI_RX_BUFFER_SIZE ( 35 )
+#endif
+
+#define EEPROM_I2C_ADDR 0
+
+/* 
+ *  =============================
+ *  Internal Register Definitions
+ *  =============================
+ */
+
+#define REGISTER_COUNT 2
+#define CONTROL_REGISTER_I2C_ADDR 0
+#define CONTROL_REGISTER_BUFFERSTATE 1
+
+#define BUFFERSTATE_CLEAN 0
+#define BUFFERSTATE_DIRTY 1
+
+#define OUTPUT_REGISTER_COUNT 11
+
+enum ControlMode : uint8_t
 {
-  while(ms > 0)
-  {
-    uint32_t window = ms > 100 ? 100 : ms;
-    ms -= window;
-    delay(ms);
-    yield();
-  }
-}
-*/
-#define wait(x) delay(x)
-
-const uint8_t POT_SEL_PIN = 4;
-const uint8_t SSD_LOAD_PIN = 3;
-const uint8_t SPI_DATA_PIN = 1;
-const uint8_t SPI_CLK_PIN = 2;
-
-const uint8_t MCP41XXX_COMMAND_NOOP = 0x00;
-const uint8_t MCP41XXX_COMMAND_WRITE = 0x10;
-const uint8_t MCP41XXX_COMMAND_SHUTDOWN = 0x20;
-
-const uint8_t MCP41XXX_POT_0 = 0x01;
-const uint8_t MCP41XXX_POT_1 = 0x02;
-// MCP41XXX control
-// Function also wakes device after shutdown
-void SetupMCP41XXX()
-{
-  pinMode(POT_SEL_PIN, OUTPUT);
-  digitalWrite(POT_SEL_PIN, HIGH);
-}
-
-void WriteMCP41XXX(uint8_t command, uint8_t data)
-{
-  digitalWrite(POT_SEL_PIN, LOW);
-  SPI.transfer(command);
-  SPI.transfer(data);
-  digitalWrite(POT_SEL_PIN, HIGH);
-}
-
-void SetMCP41XXX(uint8_t value)
-{
-  WriteMCP41XXX(MCP41XXX_COMMAND_WRITE | MCP41XXX_POT_0, value);
-}
-
-void SleepMCP41XXX()
-{
-  WriteMCP41XXX(MCP41XXX_COMMAND_SHUTDOWN | MCP41XXX_POT_0 | MCP41XXX_POT_1, 0);
-}
-
-const uint8_t MAX72XX_DEVICE_COUNT = 4;
-const uint8_t MAX72XX_SCAN_LIMIT = 0x07;
-const uint8_t MAX72XX_INTENSITY = 0;
-static_assert(MAX72XX_INTENSITY < 16, "Intensity Maximum is 15");
-static_assert(MAX72XX_INTENSITY >= 0, "Intensity Minimum is 0");
-
-// Special encoding to locate hex values at native positions
-const static uint8_t charTable[] PROGMEM = {
-    B01111110,B00110000,B01101101,B01111001,B00110011,B01011011,B01011111,B01110000,
-    B01111111,B01111011,B01110111,B00011111,B00001101,B00111101,B01001111,B01000111,
-    B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,
-    B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,
-    B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,
-    B00000000,B00000000,B00000000,B00000000,B10000000,B00000001,B10000000,B00000000,
-    B01111110,B00110000,B01101101,B01111001,B00110011,B01011011,B01011111,B01110000,
-    B01111111,B01111011,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,
-    B00000000,B01110111,B00011111,B00001101,B00111101,B01001111,B01000111,B00000000,
-    B00110111,B00000000,B00000000,B00000000,B00001110,B00000000,B00000000,B00000000,
-    B01100111,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,
-    B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00001000,
-    B00000000,B01110111,B00011111,B00001101,B00111101,B01001111,B01000111,B00000000,
-    B00110111,B00000000,B00000000,B00000000,B00001110,B00000000,B00010101,B00011101,
-    B01100111,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,
-    B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000,B00000000
+  Demo = 0,
+  Slave = 1
 };
 
-const uint8_t INTENSITY_MAP[MAX72XX_DEVICE_COUNT] = {
-  1,
-  3,
-  7,
-  1
+volatile uint8_t registers[REGISTER_COUNT] = {
+  DEFAULT_I2C_SLAVE_ADDRESS,
+  BUFFERSTATE_CLEAN
 };
 
-enum MAX72XXAddress : uint8_t
-{
-  NOOP =    0x00,
-  DIGIT0 =  0x01,
-  DIGIT1 =  0x02,
-  DIGIT2 =  0x03,
-  DIGIT3 =  0x04,
-  DIGIT4 =  0x05,
-  DIGIT5 =  0x06,
-  DIGIT6 =  0x07,
-  DIGIT7 =  0x08,
-  DECODEMODE = 0x09,
-  INTENSITY = 0x0A,
-  SCANLIMIT = 0x0B,
-  SHUTDOWN = 0x0C,
-  DISPLAYTEST = 0x0F
+// Number of 8 bit shift registers
+volatile uint8_t output_registers[OUTPUT_REGISTER_COUNT] = { 
+  0x55,
+  0x55,
+  0x55,
+  0x55,
+  0x55,
+  0x55,
+  0x55,
+  0x55,
+  0x55,
+  0x55,
+  0x55
 };
 
-struct MAX72XXMessage
+// I2C Protocol: The master writes a command mode to the device
+// The device updates it's internal state, then responds with 
+// A confirmation code, or the requested data
+// In most cases, the confirmation code is set by the operation
+// or is an echo of data sent to the device
+
+
+uint8_t test_mode_clk = 0;
+
+// Message format: Reg, Len, Data
+enum Commands : uint8_t 
 {
-  uint8_t address;
-  uint8_t data;
+  Noop = 0,
+  SetRegister = 1,
+  GetRegister = 2,
+  SetOutput = 3,
+  GetOutput = 4,
+  GetVersion = 5,
+  SetOutputIndex = 6
 };
 
-MAX72XXMessage message_buffer[MAX72XX_DEVICE_COUNT];
+uint8_t current_op = Commands::Noop;
 
-void ClearMAX72XXBuffer()
+enum CommunicationState: uint8_t
 {
-  memset(message_buffer, 0, sizeof(message_buffer));
+  Idle = 0,
+  Confirm = 1,
+  Data = 2
+};
+
+uint8_t comm_state = CommunicationState::Idle;
+
+uint8_t output_pointer;
+uint8_t register_query;
+uint8_t confirm_value;
+
+#define ERROR_FLAG 0x80
+#define SUCCESS_MASK 0xEF
+
+enum ErrorCode : uint8_t
+{
+  UnknownOperation = 0,
+  InvalidIndex = 1,
+  InvalidDataSize = 2
+};
+
+uint8_t read_i2c_addr()
+{
+  return EEPROM.read(EEPROM_I2C_ADDR);
 }
 
-void CommitMAX72XXBuffer()
+void write_i2c_addr(uint8_t addr)
 {
-  // This may need to be reversed
-  digitalWrite(SSD_LOAD_PIN, LOW);
-  for(uint32_t i = 0; i < sizeof(message_buffer); ++i)
+  EEPROM.write(EEPROM_I2C_ADDR, addr);
+}
+
+/**
+ * This is called for each read request we receive, never put more than one byte of data (with TinyWireS.send) to the 
+ * send-buffer when using this callback
+ */
+void requestEvent()
+{  
+  if (comm_state == CommunicationState::Confirm)
   {
-    SPI.transfer(reinterpret_cast<uint8_t*>(message_buffer)[i]);
+    TinyWireS.send(confirm_value);
+    comm_state = CommunicationState::Data;
+  } else {
+    switch(current_op)
+    {
+      case Commands::GetRegister:
+        TinyWireS.send(registers[register_query]);
+        comm_state = CommunicationState::Idle;
+        break;
+      case Commands::GetOutput:
+        {
+          TinyWireS.send(output_registers[output_pointer]);
+          ++output_pointer;
+          if (output_pointer >= OUTPUT_REGISTER_COUNT)
+          {
+            comm_state = CommunicationState::Idle;
+            output_pointer = 0;
+          }
+        }
+        break;
+      case Commands::GetVersion:
+        TinyWireS.send(FW_VERSION);
+        comm_state = CommunicationState::Idle;
+        break;
+      case Commands::Noop:
+      case Commands::SetRegister:
+      case Commands::SetOutput:
+      case Commands::SetOutputIndex:
+      default:
+        comm_state = CommunicationState::Idle;
+        break;
+    }
   }
-  digitalWrite(SSD_LOAD_PIN, HIGH);
-  yield();
-  ClearMAX72XXBuffer();
 }
 
-void WakeUpMAX72XX(uint32_t device)
+void shift_out_buffer()
 {
-  message_buffer[device].address = MAX72XXAddress::SHUTDOWN;
-  message_buffer[device].data = 1;
-}
-
-void ShutdownMAX72XX(uint32_t device, bool shutdown)
-{
-  message_buffer[device].address = MAX72XXAddress::SHUTDOWN;
-  message_buffer[device].data = shutdown ? 0 : 1;
-}
-
-void IntensityMAX72XX(uint32_t device, uint8_t value)
-{
-  if (value > 15)
+  // We can't use the USI, since the I2C slave engadges it
+  // Instead just shift out
+  digitalWrite(SHIFT_LATCH_PIN, LOW);
+  for(uint8_t i = 0; i < OUTPUT_REGISTER_COUNT; ++i)
   {
-    value = 15;
+    shiftOut(SHIFT_DATA_PIN, SHIFT_CLK_PIN, MSBFIRST, output_registers[i]);
   }
-  message_buffer[device].address = MAX72XXAddress::INTENSITY;
-  message_buffer[device].data = value;
+  digitalWrite(SHIFT_LATCH_PIN, HIGH);
+  registers[CONTROL_REGISTER_BUFFERSTATE] = BUFFERSTATE_CLEAN;
 }
 
-void ScanLimitMAX72XX(uint32_t device, uint8_t limit)
+void SetError(uint8_t error_code)
 {
-  if (limit != 7)
-  {
-    limit = 0x07;
-  }
-  message_buffer[device].address = MAX72XXAddress::SCANLIMIT;
-  message_buffer[device].data = limit;
+  current_op = Commands::Noop;
+  confirm_value = ERROR_FLAG | error_code;
 }
 
-void DecodeModeMAX72XX(uint32_t device, uint8_t value)
+void SetSuccess(uint8_t value)
 {
-  message_buffer[device].address = MAX72XXAddress::DECODEMODE;
-  message_buffer[device].data = value;
+  confirm_value = value & SUCCESS_MASK;
 }
 
-void DisplayTestMAX72XX(uint32_t device, bool enable)
+/**
+ * The I2C data received -handler
+ *
+ * This needs to complete before the next incoming transaction (start, data, restart/stop) on the bus does
+ * so be quick, set flags for long running tasks to be called from the mainloop instead of running them directly,
+ */
+void receiveEvent(uint8_t howMany)
 {
-  message_buffer[device].address = MAX72XXAddress::DISPLAYTEST;
-  message_buffer[device].data = enable ? 1 : 0;
-}
-
-void DigitMAX72XX(uint32_t device, uint8_t digit, uint8_t value, bool dp)
-{
-  message_buffer[device].address = MAX72XXAddress::DIGIT0 + digit;
-  message_buffer[device].data = value | (dp ? 0x80 : 0x00);
-}
-
-void SetCharMAX72XX(uint32_t device, uint8_t digit, char value, bool dp) {
     
-    if (value < 0 || value > 127)
+    comm_state = CommunicationState::Idle;
+    SetError(ErrorCode::UnknownOperation);
+    if (howMany < 1)
     {
-      value = 32;
+        return;
     }
-    DigitMAX72XX(device, digit, pgm_read_byte_near(charTable + value), dp);
-}
-
-void ClearDisplayMAX72XX()
-{
-  for(uint8_t digit = 0; digit < 8; ++digit)
-  {
-    for(uint32_t device = 0; device < MAX72XX_DEVICE_COUNT; ++device)
+    if (howMany > TWI_RX_BUFFER_SIZE)
     {
-      message_buffer[device].address = MAX72XXAddress::DIGIT0 + digit;
-      message_buffer[device].data = 0;
+        return;
     }
-    CommitMAX72XXBuffer();
-  }
-}
 
-void SetupMAX72XX()
-{
-  pinMode(SSD_LOAD_PIN, OUTPUT);
-  digitalWrite(SSD_LOAD_PIN, HIGH);
-  for(uint8_t i = 0; i < MAX72XX_DEVICE_COUNT; ++i)
-  {
-    ShutdownMAX72XX(i, false);
-  }
-  CommitMAX72XXBuffer();
-  for(uint8_t i = 0; i < MAX72XX_DEVICE_COUNT; ++i)
-  {
-    ScanLimitMAX72XX(i, MAX72XX_SCAN_LIMIT);
-  }
-  CommitMAX72XXBuffer();
-  for(uint8_t i = 0; i < MAX72XX_DEVICE_COUNT; ++i)
-  {
-    DecodeModeMAX72XX(i, 0);
-  }
-  CommitMAX72XXBuffer();
-  for(uint8_t i = 0; i < MAX72XX_DEVICE_COUNT; ++i)
-  {
-    IntensityMAX72XX(i, INTENSITY_MAP[i]); 
-  }
-  CommitMAX72XXBuffer();
-  for(uint8_t i = 0; i < MAX72XX_DEVICE_COUNT; ++i)
-  {
-    DisplayTestMAX72XX(i, true);
-    CommitMAX72XXBuffer();
-    wait(500);
-    DisplayTestMAX72XX(i, false);
-    CommitMAX72XXBuffer();
-  }
-  ClearDisplayMAX72XX();
-}
-
-// (Each device drives up to 8 digits)
-const uint8_t DIGITS_PER_DEVICE = 8;
-const uint32_t TOTAL_DIGITS = DIGITS_PER_DEVICE * MAX72XX_DEVICE_COUNT;
-
-uint8_t digit_array[TOTAL_DIGITS];
-
-// Writes a hex value into the digit array
-void WriteHex(uint8_t device, uint32_t value)
-{
-  // Uses all 8 digits of a device to render a 4 byte value
-  // First convert to characters
-  for (int32_t digit = 0; digit < 8; ++digit)
-  {
-    uint8_t nybble = (value >> (4 * digit)) & 0x0F;
-    // Char table is already formatted for us
-    digit_array[(device * DIGITS_PER_DEVICE) + digit] = pgm_read_byte_near(charTable + nybble);
-  }
-}
-
-uint16_t lock_time[TOTAL_DIGITS] = { 0 };
-const uint32_t restart_delay = 5000;
-uint16_t first_second = 0;
-uint16_t final_second = 0;
-const uint16_t max_time_per_digit = min(2500, (65535 - TOTAL_DIGITS) / TOTAL_DIGITS);
-
-void GenerateLockTimes()
-{
-  uint16_t current_time = 0;
-  uint8_t j = 0;
-  memset(reinterpret_cast<uint8_t*>(lock_time), 0, sizeof(lock_time));
-  for(uint8_t i = 0; i < TOTAL_DIGITS; ++i)
-  {
-    digit_array[i] = rand() % 10;
-    current_time += 1 + (rand() % max_time_per_digit);
-    j = rand() % TOTAL_DIGITS;
-    while(lock_time[j] != 0)
+    current_op = TinyWireS.receive();
+    howMany--;
+    comm_state = CommunicationState::Confirm;
+    switch(current_op)
     {
-      ++j;
-      if (j >= TOTAL_DIGITS)
-      {
-        j = 0;
-      }
+      case Commands::SetRegister:
+        // Byte 1: Register Index
+        // Byte 2: Set Value
+        if (howMany >= 2)
+        {
+          uint8_t reg_index = TinyWireS.receive();
+          --howMany;
+          uint8_t reg_value = TinyWireS.receive();
+          --howMany;
+          if (reg_index >= REGISTER_COUNT)
+          {
+            reg_index = 0;
+            SetError(ErrorCode::InvalidIndex);
+          } else {
+            registers[reg_index] = reg_value;
+            if (reg_index == CONTROL_REGISTER_I2C_ADDR)
+            {
+              write_i2c_addr(reg_value);
+            }
+            SetSuccess(reg_value);
+          }
+        } else {
+          SetError(ErrorCode::InvalidDataSize);
+        }
+        break;
+      case Commands::SetOutput:
+        {
+          if (howMany > 0
+              && (output_pointer + howMany) < OUTPUT_REGISTER_COUNT)
+          {
+            registers[CONTROL_REGISTER_BUFFERSTATE] = BUFFERSTATE_DIRTY;
+            while(howMany > 0)
+            {
+              output_registers[output_pointer] = TinyWireS.receive();
+              --howMany;
+              ++output_pointer;
+            }
+            if (output_pointer >= OUTPUT_REGISTER_COUNT)
+            {
+              output_pointer = 0;
+            }
+            SetSuccess(output_pointer);
+          } else {
+            SetError(ErrorCode::InvalidDataSize);
+          }
+        }
+        break;
+      case Commands::SetOutputIndex:
+        {
+          if (howMany == 1)
+          {
+            output_pointer = TinyWireS.receive();
+            --howMany;
+            if (output_pointer >= OUTPUT_REGISTER_COUNT)
+            {
+              output_pointer = 0;
+              SetError(ErrorCode::InvalidIndex);
+            }  else {
+              SetSuccess(output_pointer);
+            }
+          } else {
+            SetError(ErrorCode::InvalidDataSize);
+          }
+        }
+        break;
+      case Commands::GetRegister:
+        {
+          if (howMany == 1)
+          {
+            register_query = TinyWireS.receive();
+            --howMany;
+            if (register_query >= REGISTER_COUNT)
+            {
+              register_query = 0;
+              SetError(ErrorCode::InvalidIndex);
+            } else {
+              SetSuccess(register_query);
+            }
+          } else {
+            SetError(ErrorCode::InvalidDataSize);
+          }
+        }
+        break;
+      case Commands::GetOutput:
+        {
+          if ((howMany + output_pointer) > OUTPUT_REGISTER_COUNT)
+          {
+            SetError(ErrorCode::InvalidDataSize);
+          }
+        }
+      case Commands::GetVersion:
+      case Commands::Noop:
+      default:
+        SetSuccess(current_op);
+        break; 
     }
-    lock_time[j] = current_time;
-  }
-  final_second = current_time + 1;
-  first_second = millis();
-}
-
-void WargamesUpdate(uint8_t value)
-{
-  uint16_t second = millis() - first_second;
-  if (second > final_second)
-  {
-      delay(restart_delay);
-      GenerateLockTimes();
-  }
-  // Copy value into non-locked digits
-  for(uint8_t device = 0; device < MAX72XX_DEVICE_COUNT; ++device)
-  {
-    for(uint8_t digit = 0; digit < DIGITS_PER_DEVICE; ++digit)
+    // Drain the receive buffer
+    while(howMany > 0)
     {
-      uint8_t index = (device * DIGITS_PER_DEVICE) + digit;
-      if (lock_time[index] < second)
-      {
-        continue;
-      }
-      digit_array[(device * DIGITS_PER_DEVICE) + digit] = (digit_array[(device * DIGITS_PER_DEVICE) + digit] + 1) % 10;
+      TinyWireS.receive();
+      --howMany;
     }
-  }
 }
 
-void UpdateDisplayHex()
+void setup()
 {
-  ClearDisplayMAX72XX();
-  for (uint8_t digit = 0; digit < DIGITS_PER_DEVICE; ++digit)
-  {
-    for (uint32_t device = 0; device < MAX72XX_DEVICE_COUNT; ++device)
+    // TODO: Tri-state this and wait for input voltage to stabilize 
+    pinMode(SHIFT_LATCH_PIN, OUTPUT); // Connected to LATCH
+    pinMode(SHIFT_CLK_PIN, OUTPUT); // OC1B-, Arduino pin 3, ADC, Connected to SHIFT CLK
+    pinMode(SHIFT_DATA_PIN, OUTPUT);
+    digitalWrite(SHIFT_LATCH_PIN, LOW); // Note that this makes the led turn on, it's wire this way to allow for the voltage sensing above.
+    digitalWrite(SHIFT_CLK_PIN, LOW); // Note that this makes the led turn on, it's wire this way to allow for the voltage sensing above.
+    digitalWrite(SHIFT_DATA_PIN, LOW);
+
+    // Reset register ptr
+    output_pointer = 0;
+    
+    uint8_t i2c_addr = read_i2c_addr();
+    if (i2c_addr >= 0x80
+        || i2c_addr == 0)
     {
-      SetCharMAX72XX(device, digit, digit_array[(device * DIGITS_PER_DEVICE) + digit], false);
+      registers[CONTROL_REGISTER_I2C_ADDR] = DEFAULT_I2C_SLAVE_ADDRESS;
+      write_i2c_addr(DEFAULT_I2C_SLAVE_ADDRESS);
+    } else {
+      registers[CONTROL_REGISTER_I2C_ADDR] = i2c_addr;
     }
-    CommitMAX72XXBuffer();
-  }
+    
+    /**
+     * Reminder: taking care of pull-ups is the masters job
+     */
+
+    TinyWireS.begin(registers[CONTROL_REGISTER_I2C_ADDR]);
+    TinyWireS.onReceive(receiveEvent);
+    TinyWireS.onRequest(requestEvent);
 }
 
-void UpdateDisplayChar()
+void loop()
 {
-  ClearDisplayMAX72XX();
-  for (uint8_t digit = 0; digit < DIGITS_PER_DEVICE; ++digit)
-  {
-    for (uint32_t device = 0; device < MAX72XX_DEVICE_COUNT; ++device)
+    /**
+     * This is the only way we can detect stop condition (http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&p=984716&sid=82e9dc7299a8243b86cf7969dd41b5b5#984716)
+     * it needs to be called in a very tight loop in order not to miss any (REMINDER: Do *not* use delay() anywhere, use tws_delay() instead).
+     * It will call the function registered via TinyWireS.onReceive(); if there is data in the buffer on stop.
+     */
+    TinyWireS_stop_check();
+    if (registers[CONTROL_REGISTER_BUFFERSTATE] == BUFFERSTATE_DIRTY)
     {
-      DigitMAX72XX(device, digit, digit_array[(device * DIGITS_PER_DEVICE) + digit], false);
+      shift_out_buffer();
     }
-    CommitMAX72XXBuffer();
-  }
-}
-
-/* we always wait a bit between updates of the display */
-unsigned long delaytime=30;
-
-void setup() {
-  srand(time(NULL));
-  SPI.begin();
-  SetupMCP41XXX();
-  SetMCP41XXX(255);
-  SetupMAX72XX();
-  GenerateLockTimes();
-}
-
-uint8_t cycle = 0;
-
-void loop() { 
-    //digit_array[cycle] = cycle;
-    WargamesUpdate(cycle % 10);
-    UpdateDisplayHex();
-    //UpdateDisplayChar();
-    ++cycle;
-    wait(delaytime);
+    
 }
