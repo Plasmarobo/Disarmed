@@ -38,7 +38,7 @@ arduino pin 1 =     OC1A  = PORTB <- _BV(1) = SOIC pin 6 (PWM)
 arduino pin 3 = not(OC1B) = PORTB <- _BV(3) = SOIC pin 2 (Analog 3)
 arduino pin 4 =     OC1B  = PORTB <- _BV(4) = SOIC pin 3 (Analog 2)
  */
-#define DEFAULT_I2C_SLAVE_ADDRESS 0xE4 // the 7-bit address (remember to change this when adapting this example)
+#define DEFAULT_I2C_SLAVE_ADDRESS 0x70 // the 7-bit address (remember to change this when adapting this example)
 // Get this from https://github.com/rambo/TinyWire
 #include <TinyWireS.h>
 // The default buffer size, Can't recall the scope of defines right now
@@ -48,7 +48,7 @@ arduino pin 4 =     OC1B  = PORTB <- _BV(4) = SOIC pin 3 (Analog 2)
 
 #define EEPROM_I2C_ADDR 0
 
-/* 
+/*
  *  =============================
  *  Internal Register Definitions
  *  =============================
@@ -77,7 +77,7 @@ uint8_t registers[REGISTER_COUNT] = {
 };
 
 // Number of 8 bit shift registers
-uint8_t output_registers[OUTPUT_REGISTER_COUNT] = { 
+uint8_t output_registers[OUTPUT_REGISTER_COUNT] = {
   0x55,
   0x55,
   0x55,
@@ -92,7 +92,7 @@ uint8_t output_registers[OUTPUT_REGISTER_COUNT] = {
 };
 
 // I2C Protocol: The master writes a command mode to the device
-// The device updates it's internal state, then responds with 
+// The device updates it's internal state, then responds with
 // A confirmation code, or the requested data
 // In most cases, the confirmation code is set by the operation
 // or is an echo of data sent to the device
@@ -101,7 +101,7 @@ uint8_t output_registers[OUTPUT_REGISTER_COUNT] = {
 uint8_t test_mode_clk = 0;
 
 // Message format: Reg, Len, Data
-enum Commands : uint8_t 
+enum Commands : uint8_t
 {
   Noop = 0,
   SetRegister = 1,
@@ -148,11 +148,11 @@ void write_i2c_addr(uint8_t addr)
 }
 
 /**
- * This is called for each read request we receive, never put more than one byte of data (with TinyWireS.send) to the 
+ * This is called for each read request we receive, never put more than one byte of data (with TinyWireS.send) to the
  * send-buffer when using this callback
  */
 void requestEvent()
-{  
+{
   if (comm_state == CommunicationState::Confirm)
   {
     TinyWireS.send(confirm_value);
@@ -222,7 +222,7 @@ void SetSuccess(uint8_t value)
  */
 void receiveEvent(uint8_t howMany)
 {
-    
+
     comm_state = CommunicationState::Idle;
     SetError(ErrorCode::UnknownOperation);
     if (howMany < 1)
@@ -333,7 +333,7 @@ void receiveEvent(uint8_t howMany)
       case Commands::Noop:
       default:
         SetSuccess(current_op);
-        break; 
+        break;
     }
     // Drain the receive buffer
     while(howMany > 0)
@@ -345,7 +345,7 @@ void receiveEvent(uint8_t howMany)
 
 void setup()
 {
-    // TODO: Tri-state this and wait for input voltage to stabilize 
+    // TODO: Tri-state this and wait for input voltage to stabilize
     pinMode(SHIFT_LATCH_PIN, OUTPUT); // Connected to LATCH
     pinMode(SHIFT_CLK_PIN, OUTPUT); // OC1B-, Arduino pin 3, ADC, Connected to SHIFT CLK
     pinMode(SHIFT_DATA_PIN, OUTPUT);
@@ -355,17 +355,20 @@ void setup()
 
     // Reset register ptr
     output_pointer = 0;
-    
+
     uint8_t i2c_addr = read_i2c_addr();
-    if (i2c_addr >= 0x80
-        || i2c_addr == 0)
+    registers[CONTROL_REGISTER_I2C_ADDR] = DEFAULT_I2C_SLAVE_ADDRESS;
+    // Valid address range is from 0x7F to 0x02
+    if (i2c_addr > 0x7F
+        || i2c_addr < 0x01)
     {
-      registers[CONTROL_REGISTER_I2C_ADDR] = DEFAULT_I2C_SLAVE_ADDRESS;
       write_i2c_addr(DEFAULT_I2C_SLAVE_ADDRESS);
     } else {
       registers[CONTROL_REGISTER_I2C_ADDR] = i2c_addr;
     }
-    
+
+    registers[CONTROL_REGISTER_MODE] = ControlMode::Demo;
+
     /**
      * Reminder: taking care of pull-ups is the masters job
      */

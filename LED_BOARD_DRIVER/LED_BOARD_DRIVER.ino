@@ -188,7 +188,7 @@ class LedBoardDriver
     void ResetOutputIndex()
     {
       uint8_t index = 0;
-      Serial.printf("SetOutputIndex: %d", SetOutputIndex(index));
+      Serial.printf("ResetOutputIndex: %d", SetOutputIndex(index));
       Serial.println();
     };
 
